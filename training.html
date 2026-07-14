@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Training Center — PT Eka Bintang Perkasa</title>
+<meta name="description" content="Katalog pelatihan tersertifikasi welding, rigging, HSE & operasi industri. Kalender interaktif, booking online, dan sertifikasi resmi.">
+<link rel="icon" href="assets/logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800;900&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/core.css">
+<style>
+.page-hero{padding-top:clamp(9rem,14vw,12rem);padding-bottom:clamp(3rem,5vw,4rem);position:relative;overflow:hidden;border-bottom:1px solid var(--steel-line)}
+.page-hero .gear{position:absolute;right:-6%;top:0;width:min(50vw,540px);opacity:.05;animation:spin 100s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.crumb{font-family:var(--f-mono);font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--steel);margin-bottom:1.6rem}
+.crumb a:hover{color:var(--crimson)}
+.page-hero h1{font-size:var(--step-4);max-width:16ch;margin-bottom:1.4rem}
+.page-hero .lede{max-width:56ch}
+
+/* filters */
+.filters{display:flex;gap:.6rem;flex-wrap:wrap;margin-bottom:2.5rem}
+.chip{font-family:var(--f-mono);font-size:.74rem;letter-spacing:.08em;text-transform:uppercase;padding:.6rem 1.1rem;
+  border:1px solid var(--steel-line);color:var(--steel);transition:.3s var(--ease);cursor:pointer}
+.chip:hover{color:var(--bone);border-color:var(--steel-line-2)}
+.chip.active{background:var(--crimson);border-color:var(--crimson);color:#fff}
+
+/* catalog */
+.catalog{display:grid;grid-template-columns:repeat(3,1fr);gap:1.4rem}
+.course{border:1px solid var(--steel-line);background:var(--graphite);display:flex;flex-direction:column;transition:.4s var(--ease);position:relative;overflow:hidden}
+.course:hover{transform:translateY(-4px);border-color:var(--steel-line-2)}
+.course-top{aspect-ratio:16/10;position:relative;overflow:hidden;background:var(--void)}
+.course-top img{width:100%;height:100%;object-fit:cover;filter:grayscale(.3);transition:.6s var(--ease)}
+.course:hover .course-top img{transform:scale(1.06)}
+.course-top .tag{position:absolute;top:1rem;left:1rem;background:rgba(8,8,10,.8);backdrop-filter:blur(8px)}
+.course-body{padding:1.6rem;display:flex;flex-direction:column;flex:1}
+.course-cat{font-family:var(--f-mono);font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--crimson);margin-bottom:.7rem}
+.course h3{font-size:var(--step-1);margin-bottom:.5rem;line-height:1.05}
+.course p{color:var(--steel);font-size:.86rem;margin-bottom:1.2rem}
+.course-meta{margin-top:auto;font-family:var(--f-mono);font-size:.74rem;display:flex;flex-direction:column;gap:.55rem;padding-top:1rem;border-top:1px solid var(--steel-line)}
+.course-meta div{display:flex;justify-content:space-between;color:var(--steel)}
+.course-meta b{color:var(--bone)}
+.quota{height:5px;background:var(--void);margin-top:.3rem;overflow:hidden}
+.quota i{display:block;height:100%;background:var(--crimson)}
+.course-cta{padding:0 1.6rem 1.6rem}
+.course-cta .btn{width:100%;justify-content:center}
+
+/* calendar */
+.cal-wrap{border:1px solid var(--steel-line);background:var(--graphite)}
+.cal-head{display:flex;justify-content:space-between;align-items:center;padding:1.4rem 1.8rem;border-bottom:1px solid var(--steel-line)}
+.cal-head h3{font-size:var(--step-1)}
+.cal-nav{display:flex;gap:.5rem}
+.cal-nav button{width:40px;height:40px;border:1px solid var(--steel-line);display:grid;place-items:center;transition:.3s}
+.cal-nav button:hover{border-color:var(--crimson);color:var(--crimson)}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr)}
+.cal-dow{font-family:var(--f-mono);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--steel);
+  padding:1rem;text-align:center;border-bottom:1px solid var(--steel-line);border-right:1px solid var(--steel-line)}
+.cal-dow:last-child{border-right:none}
+.cal-cell{min-height:96px;padding:.7rem;border-right:1px solid var(--steel-line);border-bottom:1px solid var(--steel-line);position:relative;transition:background .3s}
+.cal-cell:nth-child(7n){border-right:none}
+.cal-cell.muted{opacity:.3}
+.cal-cell .d{font-family:var(--f-mono);font-size:.78rem;color:var(--steel)}
+.cal-cell.today .d{color:var(--crimson);font-weight:600}
+.cal-cell.has:hover{background:var(--graphite-2);cursor:pointer}
+.cal-ev{margin-top:.4rem;font-family:var(--f-mono);font-size:.6rem;letter-spacing:.03em;padding:.25rem .4rem;background:rgba(225,37,27,.14);
+  border-left:2px solid var(--crimson);color:var(--fog);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;line-height:1.3}
+.cal-ev.full{background:rgba(90,90,100,.14);border-color:var(--steel-dim);color:var(--steel)}
+.cal-legend{display:flex;gap:1.4rem;flex-wrap:wrap;margin-top:1.4rem;font-family:var(--f-mono);font-size:.72rem;color:var(--steel)}
+.cal-legend span{display:flex;align-items:center;gap:.5rem}
+.cal-legend i{width:12px;height:12px;background:var(--crimson);display:block}
+.cal-legend i.full{background:var(--steel-dim)}
+
+/* trainers */
+.trainers{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--steel-line);border:1px solid var(--steel-line)}
+.trainer{background:var(--charcoal);padding:1.8rem;transition:background .3s}
+.trainer:hover{background:var(--graphite)}
+.trainer-av{width:64px;height:64px;background:var(--graphite-2);border:1px solid var(--steel-line);display:grid;place-items:center;
+  font-family:var(--f-display);font-weight:800;font-size:1.3rem;color:var(--crimson);margin-bottom:1.2rem}
+.trainer h4{font-family:var(--f-display);text-transform:uppercase;font-size:1.05rem;margin-bottom:.3rem}
+.trainer .role{font-family:var(--f-mono);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--crimson);margin-bottom:.8rem}
+.trainer p{font-size:.82rem;color:var(--steel)}
+
+/* process steps */
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:1.4rem}
+.step{border-top:2px solid var(--crimson);padding-top:1.4rem}
+.step .n{font-family:var(--f-mono);font-size:.72rem;color:var(--crimson);letter-spacing:.1em}
+.step h4{font-family:var(--f-display);text-transform:uppercase;font-size:var(--step-1);margin:.8rem 0 .6rem}
+.step p{color:var(--steel);font-size:.86rem}
+
+@media(max-width:1000px){.catalog,.trainers{grid-template-columns:1fr 1fr}.steps{grid-template-columns:1fr 1fr}}
+@media(max-width:680px){.catalog,.trainers,.steps{grid-template-columns:1fr}
+  .cal-cell{min-height:64px}.cal-ev{display:none}.cal-cell.has::after{content:"";position:absolute;bottom:8px;left:8px;width:6px;height:6px;background:var(--crimson)}}
+</style>
+</head>
+<body>
+<div class="scroll-bar"></div>
+<header class="site-header">
+  <nav class="nav">
+    <a href="index.html" class="brand"><img src="assets/logo.png" alt="EBP"><span class="brand-txt"><b>Eka Bintang Perkasa</b><span>Contractor · Trading · Training</span></span></a>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <div class="has-drop"><a href="about.html">Company ▾</a><div class="drop"><a href="about.html">About Company</a><a href="about.html#vision">Vision &amp; Mission</a><a href="about.html#values">Company Values</a><a href="team.html">Team</a><a href="certification.html">Certification</a></div></div>
+      <div class="has-drop"><a href="services.html">Services ▾</a><div class="drop"><a href="services.html">Construction Services</a><a href="services.html#workflow">Project Workflow</a><a href="portfolio.html">Portfolio</a></div></div>
+      <a href="training.html" aria-current="page">Training</a>
+      <div class="has-drop"><a href="#">More ▾</a><div class="drop"><a href="clients.html">Clients &amp; Partners</a><a href="career.html">Career</a><a href="news.html">News</a><a href="faq.html">FAQ</a></div></div>
+      <a href="contact.html">Contact</a>
+    </div>
+    <div class="nav-cta"><a href="booking.html" class="btn">Book Training <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 13L13 1M13 1H4M13 1V10" stroke="currentColor" stroke-width="1.6"/></svg></a>
+      <button class="burger" aria-label="Menu"><span></span><span></span><span></span></button></div>
+  </nav>
+</header>
+<div class="mnav">
+  <a href="index.html">Home</a><a href="about.html">Company</a><a href="services.html">Services</a><a href="portfolio.html">Portfolio</a><a href="training.html" aria-current="page">Training Center</a>
+  <div class="grp-label">MORE</div><a href="team.html">Team</a><a href="certification.html">Certification</a><a href="clients.html">Clients &amp; Partners</a><a href="career.html">Career</a><a href="news.html">News</a><a href="faq.html">FAQ</a><a href="contact.html">Contact</a>
+</div>
+
+<main>
+<section class="page-hero">
+  <img class="gear" src="assets/logo.png" alt="" aria-hidden="true">
+  <div class="wrap">
+    <div class="crumb"><a href="index.html">Home</a> / Training Center</div>
+    <span class="eyebrow">EBP Training Center</span>
+    <h1 style="margin-top:1.2rem">Certified Skills, Built For The Field</h1>
+    <p class="lede">Program pelatihan tersertifikasi untuk industri energi dan konstruksi berat. Pilih dari katalog, cek jadwal di kalender interaktif, dan booking sepenuhnya online.</p>
+  </div>
+</section>
+
+<!-- CATALOG -->
+<section class="section" id="catalog">
+  <div class="wrap">
+    <div class="sec-head" data-reveal><div><span class="eyebrow">Program Training</span><h2 style="margin-top:1.2rem;font-size:var(--step-3)">Training Catalog</h2></div></div>
+    <div class="filters" data-reveal id="filters">
+      <button class="chip active" data-f="all">All</button>
+      <button class="chip" data-f="welding">Welding</button>
+      <button class="chip" data-f="hse">HSE / Safety</button>
+      <button class="chip" data-f="rigging">Rigging</button>
+      <button class="chip" data-f="ndt">NDT</button>
+    </div>
+    <div class="catalog" id="catalog-grid">
+      <!-- injected -->
+    </div>
+  </div>
+</section>
+
+<!-- CALENDAR -->
+<section class="section" id="schedule" style="padding-top:0">
+  <div class="wrap">
+    <div class="sec-head" data-reveal><div><span class="eyebrow">Interactive Schedule</span><h2 style="margin-top:1.2rem;font-size:var(--step-3)">Upcoming Batches</h2></div>
+      <p>Klik tanggal berlabel untuk melihat detail batch dan langsung booking.</p></div>
+    <div class="cal-wrap" data-reveal>
+      <div class="cal-head">
+        <h3 id="cal-title">August 2026</h3>
+        <div class="cal-nav">
+          <button id="cal-prev" aria-label="Previous month"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 1L3 7l6 6" stroke="currentColor" stroke-width="1.6"/></svg></button>
+          <button id="cal-next" aria-label="Next month"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M5 1l6 6-6 6" stroke="currentColor" stroke-width="1.6"/></svg></button>
+        </div>
+      </div>
+      <div class="cal-grid" id="cal-grid"></div>
+    </div>
+    <div class="cal-legend"><span><i></i> Seats available</span><span><i class="full"></i> Fully booked</span></div>
+  </div>
+</section>
+
+<!-- PROCESS -->
+<section class="section" style="padding-top:0">
+  <div class="wrap">
+    <div class="sec-head" data-reveal><div><span class="eyebrow">How It Works</span><h2 style="margin-top:1.2rem;font-size:var(--step-3)">From Catalog to Certificate</h2></div></div>
+    <div class="steps">
+      <div class="step" data-reveal data-delay="1"><div class="n">STEP 01</div><h4>Choose</h4><p>Pilih program dari katalog dan cek jadwal batch di kalender interaktif.</p></div>
+      <div class="step" data-reveal data-delay="2"><div class="n">STEP 02</div><h4>Book</h4><p>Isi formulir booking online, sistem menghitung kuota peserta secara real-time.</p></div>
+      <div class="step" data-reveal data-delay="3"><div class="n">STEP 03</div><h4>Pay</h4><p>Konfirmasi pembayaran via transfer bank; notifikasi otomatis via WhatsApp &amp; email.</p></div>
+      <div class="step" data-reveal data-delay="4"><div class="n">STEP 04</div><h4>Certify</h4><p>Ikuti pelatihan bersama trainer bersertifikat dan terima sertifikat resmi.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- TRAINERS -->
+<section class="section" style="padding-top:0">
+  <div class="wrap">
+    <div class="sec-head" data-reveal><div><span class="eyebrow">Profil Trainer</span><h2 style="margin-top:1.2rem;font-size:var(--step-3)">Learn From Practitioners</h2></div></div>
+    <div class="trainers" data-reveal>
+      <div class="trainer"><div class="trainer-av">IT</div><h4>Imanudin Taufiq</h4><div class="role">Lead Instructor</div><p>20+ tahun di PT Smelting &amp; proyek EPC offshore ExxonMobil.</p></div>
+      <div class="trainer"><div class="trainer-av">RS</div><h4>R. Santoso</h4><div class="role">Welding Inspector</div><p>Certified Welding Inspector (CWI) untuk SMAW, GTAW &amp; FCAW.</p></div>
+      <div class="trainer"><div class="trainer-av">HW</div><h4>H. Wijaya</h4><div class="role">HSE Specialist</div><p>Ahli K3 Migas dengan pengalaman shutdown &amp; confined space.</p></div>
+      <div class="trainer"><div class="trainer-av">AP</div><h4>A. Pratama</h4><div class="role">Rigging Master</div><p>Rigger &amp; signalman bersertifikat untuk lifting offshore.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- PAYMENT INFO -->
+<section class="section" id="payment" style="padding-top:0">
+  <div class="wrap">
+    <div class="train" data-reveal style="border:1px solid var(--steel-line);padding:clamp(2rem,4vw,3.5rem);background:radial-gradient(120% 140% at 0% 0%,rgba(225,37,27,.1),transparent 55%),var(--graphite)">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:center" class="pay-grid">
+        <div>
+          <span class="eyebrow">Payment Information</span>
+          <h2 style="font-size:var(--step-2);margin:1rem 0 1rem;font-family:var(--f-display);text-transform:uppercase">Simple, Transparent Billing</h2>
+          <p style="color:var(--steel)">Setelah booking, Anda menerima invoice resmi dan instruksi pembayaran. Konfirmasi otomatis dikirim via WhatsApp dan email begitu pembayaran diverifikasi.</p>
+        </div>
+        <div style="display:grid;gap:1px;background:var(--steel-line);border:1px solid var(--steel-line)">
+          <div style="background:var(--void);padding:1.2rem 1.4rem;display:flex;justify-content:space-between;font-family:var(--f-mono);font-size:.82rem"><span style="color:var(--steel)">Bank</span><b>BCA · 1234 567 890</b></div>
+          <div style="background:var(--void);padding:1.2rem 1.4rem;display:flex;justify-content:space-between;font-family:var(--f-mono);font-size:.82rem"><span style="color:var(--steel)">A/N</span><b>PT Eka Bintang Perkasa</b></div>
+          <div style="background:var(--void);padding:1.2rem 1.4rem;display:flex;justify-content:space-between;font-family:var(--f-mono);font-size:.82rem"><span style="color:var(--steel)">Confirm via</span><b style="color:var(--crimson)">WhatsApp / Email</b></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer class="site-footer">
+  <img class="footer-mark" src="assets/logo.png" alt="" aria-hidden="true">
+  <div class="wrap">
+    <div class="footer-top">
+      <div class="footer-col footer-brand"><a href="index.html" class="brand"><img src="assets/logo.png" alt="EBP" style="width:44px;height:44px"><span class="brand-txt"><b>Eka Bintang Perkasa</b><span>The Expert Consultant</span></span></a><p>Kontraktor konstruksi mekanikal, fabrikasi, dan penyedia layanan tenaga ahli untuk sektor energi dan industri di Indonesia.</p></div>
+      <div class="footer-col"><h4>Company</h4><a href="about.html">About Us</a><a href="team.html">Team</a><a href="certification.html">Certification</a><a href="career.html">Career</a><a href="news.html">News</a></div>
+      <div class="footer-col"><h4>Services</h4><a href="services.html">Construction</a><a href="portfolio.html">Portfolio</a><a href="training.html">Training Center</a><a href="clients.html">Clients</a><a href="faq.html">FAQ</a></div>
+      <div class="footer-col"><h4>Contact</h4><p>Ruko Grand Soetomo R4<br>Jl. Dr. Soetomo, Gresik<br>East Java, Indonesia</p><a href="tel:+62313392315">+62 31 3392 3154</a><a href="mailto:marketing@ekabintangperkasa.com">marketing@ekabintangperkasa.com</a></div>
+    </div>
+    <div class="footer-bottom"><span>© 2026 PT Eka Bintang Perkasa — Made in Indonesia</span>
+      <div class="footer-social"><a href="#" aria-label="Instagram"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="18" height="18" rx="5" stroke="currentColor" stroke-width="1.6"/><circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.6"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg></a><a href="#" aria-label="LinkedIn"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="18" height="18" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M7 10v7M7 7v.01M11 17v-4a2 2 0 014 0v4" stroke="currentColor" stroke-width="1.6"/></svg></a></div>
+    </div>
+  </div>
+</footer>
+<a href="https://wa.me/6281314583135" class="wa-float" aria-label="WhatsApp"><svg viewBox="0 0 24 24" fill="#fff"><path d="M12 2a10 10 0 00-8.5 15.3L2 22l4.8-1.3A10 10 0 1012 2zm5.8 14.2c-.2.7-1.2 1.3-1.7 1.3-.4 0-1 .1-3.3-.9-2.8-1.2-4.5-4-4.6-4.2-.1-.2-1.1-1.4-1.1-2.7 0-1.3.7-1.9 1-2.2.2-.2.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.4 0 .5l-.4.6c-.1.2-.3.3-.1.6.5.9 1.1 1.5 1.8 2 .3.2.5.2.7 0l.7-.8c.2-.2.4-.2.6-.1l1.9.9c.2.1.4.2.4.3.1.2.1.7-.1 1.4z"/></svg></a>
+
+<script src="assets/core.js"></script>
+<script>
+const COURSES=[
+ {cat:'welding',tag:'Registration Open',live:1,t:'Certified Welder 3G/4G',d:'SMAW & GTAW sesuai standar sertifikasi Migas.',batch:'02 Aug 2026',dur:'5 Days',price:'Rp 4.500.000',fill:14,cap:18,img:'https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?q=80&w=800&auto=format&fit=crop'},
+ {cat:'hse',tag:'Registration Open',live:1,t:'K3 Migas & Confined Space',d:'Keselamatan kerja untuk lingkungan offshore & confined space.',batch:'11 Aug 2026',dur:'3 Days',price:'Rp 2.750.000',fill:9,cap:20,img:'https://images.unsplash.com/photo-1578662996442-48f60103fc96?q=80&w=800&auto=format&fit=crop'},
+ {cat:'rigging',tag:'Filling Fast',live:1,t:'Rigging & Signalman',d:'Teknik lifting aman, sertifikasi rigger & signalman.',batch:'18 Aug 2026',dur:'4 Days',price:'Rp 3.900.000',fill:16,cap:18,img:'https://images.unsplash.com/photo-1541888946425-d81bb19240f5?q=80&w=800&auto=format&fit=crop'},
+ {cat:'ndt',tag:'Registration Open',live:1,t:'NDT Level II — UT',d:'Ultrasonic Testing untuk inspeksi las & material.',batch:'25 Aug 2026',dur:'6 Days',price:'Rp 6.200.000',fill:5,cap:15,img:'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=800&auto=format&fit=crop'},
+ {cat:'welding',tag:'Filling Fast',live:1,t:'Pipe Welding 6G',d:'Sertifikasi pengelasan pipa posisi 6G untuk piping.',batch:'08 Sep 2026',dur:'7 Days',price:'Rp 5.800.000',fill:12,cap:14,img:'https://images.unsplash.com/photo-1567789884554-0b844b597180?q=80&w=800&auto=format&fit=crop'},
+ {cat:'hse',tag:'Registration Open',live:1,t:'Fire Watch & Rescue',d:'Prosedur fire watch, rescue & tanggap darurat industri.',batch:'15 Sep 2026',dur:'2 Days',price:'Rp 1.950.000',fill:7,cap:24,img:'https://images.unsplash.com/photo-1599700403969-f77b3aa74837?q=80&w=800&auto=format&fit=crop'}
+];
+const grid=document.getElementById('catalog-grid');
+function pct(f,c){return Math.round(f/c*100)}
+function render(f){
+  grid.innerHTML=COURSES.filter(c=>f==='all'||c.cat===f).map(c=>{
+    const full=c.fill>=c.cap;
+    return `<article class="course">
+      <div class="course-top"><img src="${c.img}" alt="${c.t}"><span class="tag ${full?'tag--busy':'tag--live'}">${full?'Fully Booked':c.tag}</span></div>
+      <div class="course-body">
+        <div class="course-cat">${c.cat.toUpperCase()}</div>
+        <h3>${c.t}</h3><p>${c.d}</p>
+        <div class="course-meta">
+          <div><span>Next Batch</span><b>${c.batch}</b></div>
+          <div><span>Duration</span><b>${c.dur}</b></div>
+          <div><span>Investment</span><b>${c.price}</b></div>
+          <div><span>Seats</span><b>${c.fill} / ${c.cap}</b></div>
+          <div class="quota"><i style="width:${pct(c.fill,c.cap)}%;background:${full?'var(--steel-dim)':'var(--crimson)'}"></i></div>
+        </div>
+      </div>
+      <div class="course-cta"><a href="booking.html" class="btn ${full?'btn--ghost':''}" ${full?'style="pointer-events:none;opacity:.5"':''}>${full?'Join Waitlist':'Reserve Seat'}
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 13L13 1M13 1H4M13 1V10" stroke="currentColor" stroke-width="1.6"/></svg></a></div>
+    </article>`;
+  }).join('');
+  grid.querySelectorAll('.course').forEach((el,i)=>{el.setAttribute('data-reveal','');el.setAttribute('data-delay',(i%3)+1);requestAnimationFrame(()=>el.classList.add('in'))});
+}
+render('all');
+document.querySelectorAll('#filters .chip').forEach(ch=>ch.addEventListener('click',()=>{
+  document.querySelectorAll('#filters .chip').forEach(c=>c.classList.remove('active'));
+  ch.classList.add('active');render(ch.dataset.f);
+}));
+
+/* CALENDAR */
+const EVENTS={ // yyyy-m(0)-d : {name, full}
+ '2026-7-2':{n:'Welder 3G/4G',full:0},'2026-7-11':{n:'K3 Migas',full:0},'2026-7-18':{n:'Rigging',full:0},'2026-7-25':{n:'NDT UT L2',full:0},
+ '2026-8-8':{n:'Pipe 6G',full:0},'2026-8-15':{n:'Fire Watch',full:0},'2026-8-22':{n:'Welder 3G/4G',full:1}
+};
+let cur=new Date(2026,7,1);
+const MN=['January','February','March','April','May','June','July','August','September','October','November','December'];
+const DOW=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+function drawCal(){
+  const g=document.getElementById('cal-grid');const y=cur.getFullYear(),m=cur.getMonth();
+  document.getElementById('cal-title').textContent=MN[m]+' '+y;
+  const first=new Date(y,m,1).getDay(),days=new Date(y,m+1,0).getDate();
+  const today=new Date();
+  let h=DOW.map(d=>`<div class="cal-dow">${d}</div>`).join('');
+  for(let i=0;i<first;i++)h+=`<div class="cal-cell muted"></div>`;
+  for(let d=1;d<=days;d++){
+    const key=`${y}-${m}-${d}`;const ev=EVENTS[key];
+    const isToday=(d===today.getDate()&&m===today.getMonth()&&y===today.getFullYear());
+    h+=`<div class="cal-cell ${ev?'has':''} ${isToday?'today':''}" ${ev?`onclick="location.href='booking.html'"`:''}>
+      <span class="d">${d}</span>${ev?`<div class="cal-ev ${ev.full?'full':''}">${ev.full?'FULL · ':''}${ev.n}</div>`:''}</div>`;
+  }
+  g.innerHTML=h;
+}
+drawCal();
+document.getElementById('cal-prev').onclick=()=>{cur.setMonth(cur.getMonth()-1);drawCal()};
+document.getElementById('cal-next').onclick=()=>{cur.setMonth(cur.getMonth()+1);drawCal()};
+</script>
+</body>
+</html>
